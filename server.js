@@ -37,12 +37,24 @@ app.post('/TODO', function(req, res){
     if(!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length ===0){
         return res.status(400).send();
     } // checkes if the todo is empty
-    
+
     body.description = body.description.trim();
     body.id = TODOnextId++;
     TODO.push(body);
     res.json(body);
 });
+
+app.delete('/TODO/:id', function(req, res){
+    var todoId = parseInt(req.params.id, 10);
+    var matchedTodo = _.findWhere(TODO, {id: todoId});
+
+    if (!matchedTodo){
+        res.status(404).json({"error": "No todo found with that id"});
+    } else {
+        TODO = _.without(TODO, matchedTodo);
+        res.json(matchedTodo);
+    }
+})
 
 app.listen(PORT, function() {
     console.log('Express is listening to the port ' + PORT + '!')
