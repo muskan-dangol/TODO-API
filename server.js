@@ -13,9 +13,17 @@ app.get('/', function(req, res) {
     res.send('Root Api to TODO app');
 });
 
-
+//getting todos with query params completed=true
 app.get('/TODO', function (req, res) {
-    res.json(TODO);
+    var queryParams = req.query;
+    var filteredTodo = TODO;
+    if (queryParams.hasOwnProperty('completed') && queryParams.completed=== 'true'){
+        filteredTodo = _.where(filteredTodo, {completed: true});
+    } else if (queryParams.hasOwnProperty('completed') && queryParams.completed === 'false'){
+        filteredTodo = _.where(filteredTodo, {completed: false});
+    }
+    
+    res.json(filteredTodo);
 });
 
 app.get('/TODO/:id', function(req, res) {
